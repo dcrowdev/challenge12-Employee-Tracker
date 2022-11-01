@@ -1,0 +1,25 @@
+{
+  "name": "challenge12-employee-tracker",
+  "version": "1.0.0",
+  "description": "cli using mysql",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dcrowdev/challenge12-Employee-Tracker.git"
+  },
+  "author": "Dylan Crowley",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dcrowdev/challenge12-Employee-Tracker/issues"
+  },
+  "homepage": "https://github.com/dcrowdev/challenge12-Employee-Tracker#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "inquirer": "^8.2.4",
+    "mysql2": "^2.3.3"
+  }
+}
