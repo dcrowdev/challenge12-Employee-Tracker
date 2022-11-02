@@ -60,8 +60,7 @@ const addDepartment = () => {
         name: 'department',
         message: 'What is the name of the department?'
 }).then(answer => {
-    let stringAnswer = JSON.stringify(answer)
-    db.query(`INSERT INTO departments (name) VALUES ('${stringAnswer}')`)
+    db.query(`INSERT INTO departments (name) VALUES ('${answer.department}')`)
 }).catch(err => console.error(err));
 }
 
