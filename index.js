@@ -28,7 +28,10 @@ const init = () => {
         message: 'What would you like to do?',
         choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Quit']
         }).then(answer => {
-            if (answer.vieworadd === 'View all departments') {
+            if (answer.vieworadd === 'Quit') {
+                return;
+            }
+              else if (answer.vieworadd === 'View all departments') {
                 db.query('SELECT * FROM departments', function (err, results) {
                     console.table(results);
                     init();
@@ -43,13 +46,24 @@ const init = () => {
                     console.table(results);
                     init();
                 });
-            }
+            } else if (answer.vieworadd === 'Add a department') {
+                addDepartment();
+            } 
 
 
     })
 }
 
-
+const addDepartment = () => {
+    inquirer.prompt({
+        type: 'input',
+        name: 'department',
+        message: 'What is the name of the department?'
+}).then(answer => {
+    let stringAnswer = JSON.stringify(answer)
+    db.query(`INSERT INTO departments (name) VALUES ('${stringAnswer}')`)
+}).catch(err => console.error(err));
+}
 
 
 
