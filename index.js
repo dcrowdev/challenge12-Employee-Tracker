@@ -1,4 +1,3 @@
-const { urlencoded } = require('express');
 const express = require('express');
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
@@ -7,7 +6,7 @@ const PORT = process.env.PORT || 3001;
 const app = express();
 
 app.use(express.json());
-app.use(urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }))
 
 const db = mysql.createConnection(
     {
@@ -69,15 +68,15 @@ const addDepartment = () => {
 }
 
 const addRole = () => {
-    let departments = [];
-    db.query(`SELECT * FROM departments`, (err, results) => {
+        const departments = [];
+        db.query(`SELECT * FROM departments`, (err, results) => {
         if (err) {
-            throw err;
+            throw (err);
         }
-    results.forEach(result => departments.push(result.name))  
-    console.log(departments)
-    })
-    inquirer.prompt({
+        results.forEach(result => departments.push(result.name));
+    }),
+     inquirer.prompt([
+    {
         type: 'input',
         name: 'rolename',
         message: 'What is the name of the role?'
@@ -91,10 +90,28 @@ const addRole = () => {
         type: 'list',
         name: 'roledepartment',
         message: 'Which department does the role belong to?',
-        choices: [...departments]
+        choices: departments
     }
-)
-}
+    ]).then(answers => {
+        db.query(`SELECT id FROM departments WHERE name = '${answers.roledepartment}'`, (err, results) => {
+            if (err) {
+                throw err;
+            }
+            let departmentId = results[0].id;
+            console.log(departmentId)
+        
+        db.query(`INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)`, [answers.rolename, answers.rolesalary, departmentId], (err, results) => {
+            if (err) {
+                throw err;
+            }
+            console.log(`Success!`)
+            })
+        })
+    })
+};
+
+
+
 
 const addEmployee = () => {
 
