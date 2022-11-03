@@ -31,17 +31,21 @@ const init = () => {
                 return;
             }
               else if (answer.vieworadd === 'View all departments') {
-                db.query('SELECT * FROM departments', function (err, results) {
+                db.query('SELECT * FROM departments ORDER BY name', function (err, results) {
                     console.table(results);
                     init();
                 });
             } else if (answer.vieworadd === 'View all roles') {
-                db.query('SELECT * FROM roles', function (err, results) {
+                db.query(`SELECT roles.id AS 'role_id', roles.title AS 'Role Title', roles.salary AS 'Salary', departments.name AS 'Department Name' FROM roles INNER JOIN departments ON departments.id = roles.department_id`, function (err, results) {
                     console.table(results);
                     init();
                 });
             } else if (answer.vieworadd === 'View all employees') {
-                db.query('SELECT * FROM employees', function (err, results) {
+                db.query(`SELECT employees.id, employees.first_name AS 'First Name', employees.last_name AS 'Last Name', roles.title AS 'Job Title', departments.name AS 'Department Name', 
+                        roles.salary AS 'Salary', CONCAT (M.first_name, " ", M.last_name) AS 'Managers' FROM employees INNER JOIN roles ON employees.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id LEFT JOIN employees M ON employees.manager_id = M.id ORDER BY employees.last_name`, function (err, results) {
+                    if (err) {
+                        throw err;
+                    }
                     console.table(results);
                     init();
                 });
