@@ -118,11 +118,48 @@ const addRole = () => {
 
 
 const addEmployee = () => {
-
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'firstname',
+            message: 'What is the employees first name?'
+        },
+        {
+            type: 'input',
+            name: 'lastname',
+            message: 'What is the employees last name?'
+        },
+        {
+            type: 'list',
+            name: 'employeerole',
+            message: 'What is the employees role?',
+            choices: 
+        },
+        {
+            type: 'list',
+            name: 'employeemanager',
+            message: 'Who is the employees manager?',
+            choices: ['None', ]
+        }
+])
 }
 
 const updateEmployee = () => {
+    inquirer.prompt([
+        {
+            type: 'list',
+            name: 'whoupdate',
+            message: 'Which employees role would you like to update?',
+            choices: 
+        },
+        {
+            type: 'input',
+            name: 'assignrole',
+            message: 'Which role do you want to assign the selected employee?',
+            choices: 
+        }
 
+])
 }
 
 
