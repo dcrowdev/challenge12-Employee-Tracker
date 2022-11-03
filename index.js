@@ -131,32 +131,56 @@ const addRole = async () => {
 
 
 
-// const addEmployee = () => {
-//     inquirer.prompt([
-//         {
-//             type: 'input',
-//             name: 'firstname',
-//             message: 'What is the employees first name?'
-//         },
-//         {
-//             type: 'input',
-//             name: 'lastname',
-//             message: 'What is the employees last name?'
-//         },
-//         {
-//             type: 'list',
-//             name: 'employeerole',
-//             message: 'What is the employees role?',
-//             choices: 
-//         },
-//         {
-//             type: 'list',
-//             name: 'employeemanager',
-//             message: 'Who is the employees manager?',
-//             choices: ['None', ]
-//         }
-// ])
-// }
+const addEmployee = async () => {
+    const [roles] = await db.promise().query('SELECT * FROM roles');
+    const rolesArr = roles.map(role => ({
+        name: role.title,
+        value: role.id
+    }));
+    const [employees] = await db.promise().query('SELECT * FROM employees');
+    const employeeArr = employees.map(employee => ({
+        name: employee.first_name + ' ' + employee.last_name,
+        value: employee.id
+    }));
+    employeeArr.push({
+    name: 'None',
+    value: null,
+    });
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'firstname',
+            message: 'What is the employees first name?'
+        },
+        {
+            type: 'input',
+            name: 'lastname',
+            message: 'What is the employees last name?'
+        },
+        {
+            type: 'list',
+            name: 'employeerole',
+            message: 'What is the employees role?',
+            choices: rolesArr
+        },
+        {
+            type: 'list',
+            name: 'employeemanager',
+            message: 'Who is the employees manager?',
+            choices: employeeArr
+        }
+    ]).then(answers => {
+        let employeeObj = { first_name: answers.firstname, last_name: answers.lastname, role_id: answers.employeerole, manager_id: answers.employeemanager  }
+        db.promise().query('INSERT INTO employees SET ?', employeeObj).then(([response]) => {
+            if (response.affectedRows > 0) {
+                viewEmployees();
+            } else {
+                console.info('Failed to create new employee')
+                init();
+            }
+        })
+    })
+}
 
 const updateEmployee = async () => {
     const [employees] = await db.promise().query('SELECT * FROM employees');
